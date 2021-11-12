@@ -8,6 +8,7 @@ class ElementCollection extends Array {
     } else {
       this.on('DOMContentLoaded', cb);
     }
+    return this;
   }
 
   on(event, cbOrSelector, cb) {
@@ -20,6 +21,7 @@ class ElementCollection extends Array {
         })
       });
     }
+    return this;
   }
 
   next() {
@@ -30,12 +32,22 @@ class ElementCollection extends Array {
     return this.map(e => e.previousElementSibling).filter(e => e != null);
   }
 
-  removeClass() {
-
+  removeClass(className) {
+    this.forEach(e => e.classList.remove(className));
+    return this;
+  }
+  
+  addClass(className) {
+    this.forEach(e => e.classList.add(className));
+    return this;
   }
 
-  addClass() {
-    
+  css(property, value) {
+    const camelProp = property.replace(/(-[a-z])/, g => {
+      return g.replace('-', '').toUpperCase();
+    });
+    this.forEach(e => e.style[camelProp] = value);
+    return this;
   }
 }
 
