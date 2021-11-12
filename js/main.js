@@ -20,12 +20,12 @@ $(document).ready(function () {
   })
 })
 
-// $.get({
-//   url: "https://jsonplaceholder.typicode.com/todos/-1",
-//   success: data => {
-//     console.log("First success", data)
-//   },
-// })
-//   .done(data => console.log("Second success", data))
-//   .fail(e => console.error("Fail", e))
-//   .always(() => console.log("Always"))
+$.get({
+  url: "https://jsonplaceholder.typicode.com/todos/1", //change with -1 and got some errors tho
+  success: data => {
+    console.log("First success", data)
+  },
+})
+  .done(data => console.log("Second success", data))
+  .fail(e => console.error("Fail", e))
+  .always(() => console.log("Always"))

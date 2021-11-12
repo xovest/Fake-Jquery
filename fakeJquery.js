@@ -51,10 +51,58 @@ class ElementCollection extends Array {
   }
 }
 
+class AjaxPromise {
+  constructor(promise) {
+    this.promise = promise;
+  }
+
+  done(cb) {
+    this.promise = this.promise.then(data => {
+      cb(data);
+      return data;
+    });
+    return this;
+  }
+
+  fail(cb) {
+    this.promise = this.promise.catch(cb);
+    return this;
+  }
+  
+  always(cb) {
+    this.promise = this.promise.finally(cb);
+    return this;
+  }
+}
+
 function $(param) {
   if (typeof param === 'string' || param instanceof String) {
     return new ElementCollection(...document.querySelectorAll(param));
   } else {
     return new ElementCollection(param);
   }
+}
+
+$.get = function({ url, data = {}, success = () => {}, dataType }) {
+  const queryString = Object.entries(data).map(([key, value]) => {
+    return `${key}=${value}`;
+  }).join('&');
+
+  return new AjaxPromise(
+      fetch(`${url}?${queryString}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': dataType
+      }
+    }).then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error(res.status);
+      }
+    }).then(data => {
+      success(data);
+      return data;
+    })
+  );
 }
